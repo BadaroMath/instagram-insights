@@ -1,0 +1,552 @@
+{
+  "daily": [
+    {
+      "description": "IG account ID in Facebook Business Manager.",
+      "mode": "NULLABLE",
+      "name": "account_id",
+      "type": "STRING"
+    },
+    {
+      "description": "IG username.",
+      "mode": "NULLABLE",
+      "name": "username",
+      "type": "STRING"
+    },
+    {
+      "description": "Number of taps on the email link in the IG User's profile each day.",
+      "mode": "NULLABLE",
+      "name": "email_contacts",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Number of new followers each day. Not available on IG Users with fewer than 100 followers.",
+      "mode": "NULLABLE",
+      "name": "follower_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Number of taps on the directions link in the IG User's profile each day.",
+      "mode": "NULLABLE",
+      "name": "get_directions_clicks",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Number of times the IG User's IG Media objects (i.e. posts, stories and promotions) have been viewed each day. Does not include profile views.",
+      "mode": "NULLABLE",
+      "name": "impressions",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Number of taps on the call link in the IG User's profile each day.",
+      "mode": "NULLABLE",
+      "name": "phone_call_clicks",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Number of users who have viewed the IG User's profile each day.",
+      "mode": "NULLABLE",
+      "name": "profile_views",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Number of unique users who have viewed at least one of the IG User's IG Media each day.",
+      "mode": "NULLABLE",
+      "name": "reach",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Number of taps on the text message link in the IG User's profile each day.",
+      "mode": "NULLABLE",
+      "name": "text_message_clicks",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Number of taps on the website link in the IG User's profile each day.",
+      "mode": "NULLABLE",
+      "name": "website_clicks",
+      "type": "INTEGER"
+    }
+  ],
+  "lifetime": [
+    {
+      "description": "IG account ID in Facebook Business Manager.",
+      "mode": "NULLABLE",
+      "name": "account_id",
+      "type": "STRING"
+    },
+    {
+      "description": "Biography displayed at IG User profile.",
+      "mode": "NULLABLE",
+      "name": "biography",
+      "type": "STRING"
+    },
+    {
+      "description": "IG User ID.",
+      "mode": "NULLABLE",
+      "name": "ig_id",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Name displayed at IG User profile.",
+      "mode": "NULLABLE",
+      "name": "name",
+      "type": "STRING"
+    },
+    {
+      "description": "Path to IG User profile picture.",
+      "mode": "NULLABLE",
+      "name": "profile_picture_url",
+      "type": "STRING"
+    },
+    {
+      "description": "IG username.",
+      "mode": "NULLABLE",
+      "name": "username",
+      "type": "STRING"
+    },
+    {
+      "description": "IG User business website.",
+      "mode": "NULLABLE",
+      "name": "website",
+      "type": "STRING"
+    },
+    {
+      "description": "Total number of followers.",
+      "mode": "NULLABLE",
+      "name": "followers_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of IG accounts the User follows.",
+      "mode": "NULLABLE",
+      "name": "follows_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of media posted.",
+      "mode": "NULLABLE",
+      "name": "media_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "The cities of the IG User's followers. Not available on IG Users with fewer than 100 followers.",
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "field_name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "field_value",
+          "type": "INTEGER"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "audience_city",
+      "type": "RECORD"
+    },
+    {
+      "description": "The countries of the IG User's followers. Not available on IG Users with fewer than 100 followers.",
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "field_name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "field_value",
+          "type": "INTEGER"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "audience_country",
+      "type": "RECORD"
+    },
+    {
+      "description": "The gender and age distribution of the IG User's followers. Not available on IG Users with fewer than 100 followers.",
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "field_name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "field_value",
+          "type": "INTEGER"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "audience_gender_age",
+      "type": "RECORD"
+    },
+    {
+      "description": "The locales by country codes of the IG User's followers. Not available on IG Users with fewer than 100 followers.",
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "field_name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "field_value",
+          "type": "INTEGER"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "audience_locale",
+      "type": "RECORD"
+    }
+  ],
+  "post": [
+    {
+      "description": "Media ID.",
+      "mode": "NULLABLE",
+      "name": "id",
+      "type": "STRING"
+    },
+    {
+      "description": "IG Media ID.",
+      "mode": "NULLABLE",
+      "name": "ig_id",
+      "type": "STRING"
+    },
+    {
+      "description": "ISO 8601 formatted creation date in UTC.",
+      "mode": "NULLABLE",
+      "name": "created_date",
+      "type": "TIMESTAMP"
+    },
+    {
+      "description": "Username of user who created the media.",
+      "mode": "NULLABLE",
+      "name": "username",
+      "type": "STRING"
+    },
+    {
+      "description": "Media URL. Will be omitted from responses if the media contains copyrighted material, or has been flagged for a copyright violation.",
+      "mode": "NULLABLE",
+      "name": "media_url",
+      "type": "STRING"
+    },
+    {
+      "description": "Caption. @ symbol excluded.",
+      "mode": "NULLABLE",
+      "name": "caption",
+      "type": "STRING"
+    },
+    {
+      "description": "Media type. Can be CAROUSEL_ALBUM, IMAGE, or VIDEO.",
+      "mode": "NULLABLE",
+      "name": "media_type",
+      "type": "STRING"
+    },
+    {
+      "description": "Surface where the media is published. Can be AD, FEED, IGTV, or STORY.",
+      "mode": "NULLABLE",
+      "name": "media_product_type",
+      "type": "STRING"
+    },
+    {
+      "description": "Media thumbnail URL. Only available on VIDEO media.",
+      "mode": "NULLABLE",
+      "name": "thumbnail_url",
+      "type": "STRING"
+    },
+    {
+      "description": "Permanent URL to the media.",
+      "mode": "NULLABLE",
+      "name": "permalink",
+      "type": "STRING"
+    },
+    {
+      "description": "IGTV media title.",
+      "mode": "NULLABLE",
+      "name": "video_title",
+      "type": "STRING"
+    },
+    {
+      "description": "Indicates if comments are enabled or disabled.",
+      "mode": "NULLABLE",
+      "name": "is_comment_enabled",
+      "type": "BOOLEAN"
+    },
+    {
+      "description": "Count of likes on the media.",
+      "mode": "NULLABLE",
+      "name": "like_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Count of comments on the media.",
+      "mode": "NULLABLE",
+      "name": "comments_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Sum of likes_count, comment_count and saved counts on the IG Media.",
+      "mode": "NULLABLE",
+      "name": "engagement",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of times the IG Media object has been seen.",
+      "mode": "NULLABLE",
+      "name": "impressions",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of unique Instagram accounts that have seen the IG Media object.",
+      "mode": "NULLABLE",
+      "name": "reach",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of unique Instagram accounts that have saved the IG Media object.",
+      "mode": "NULLABLE",
+      "name": "saved",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of times the video IG Media has been seen. For album IG Media, the number of times all videos within the album have been seen.",
+      "mode": "NULLABLE",
+      "name": "video_views",
+      "type": "INTEGER"
+    }
+  ],
+  "story": [
+    {
+      "description": "Media ID.",
+      "mode": "NULLABLE",
+      "name": "id",
+      "type": "STRING"
+    },
+    {
+      "description": "IG Media ID.",
+      "mode": "NULLABLE",
+      "name": "ig_id",
+      "type": "STRING"
+    },
+    {
+      "description": "ISO 8601 formatted creation date in UTC.",
+      "mode": "NULLABLE",
+      "name": "timestamp",
+      "type": "TIMESTAMP"
+    },
+    {
+      "description": "Username of user who created the media.",
+      "mode": "NULLABLE",
+      "name": "username",
+      "type": "STRING"
+    },
+    {
+      "description": "Media URL. Will be omitted from responses if the media contains copyrighted material, or has been flagged for a copyright violation.",
+      "mode": "NULLABLE",
+      "name": "media_url",
+      "type": "STRING"
+    },
+    {
+      "description": "Caption. @ symbol excluded.",
+      "mode": "NULLABLE",
+      "name": "caption",
+      "type": "STRING"
+    },
+    {
+      "description": "Media type. Can be CAROUSEL_ALBUM, IMAGE, or VIDEO.",
+      "mode": "NULLABLE",
+      "name": "media_type",
+      "type": "STRING"
+    },
+    {
+      "description": "Surface where the media is published. Can be AD, FEED, IGTV, or STORY.",
+      "mode": "NULLABLE",
+      "name": "media_product_type",
+      "type": "STRING"
+    },
+    {
+      "description": "Permanent URL to the media.",
+      "mode": "NULLABLE",
+      "name": "permalink",
+      "type": "STRING"
+    },
+    {
+      "description": "Indicates if comments are enabled or disabled.",
+      "mode": "NULLABLE",
+      "name": "is_comment_enabled",
+      "type": "BOOLEAN"
+    },
+    {
+      "description": "Count of likes on the media.",
+      "mode": "NULLABLE",
+      "name": "like_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Count of comments on the media.",
+      "mode": "NULLABLE",
+      "name": "comments_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Number of times someone exited the story IG Media object.",
+      "mode": "NULLABLE",
+      "name": "exits",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of times the story IG Media object has been seen.",
+      "mode": "NULLABLE",
+      "name": "impressions",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of unique Instagram accounts that have seen the story IG Media object.",
+      "mode": "NULLABLE",
+      "name": "reach",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of replies (IG Comments) on the story IG Media object.",
+      "mode": "NULLABLE",
+      "name": "replies",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of taps to see this story IG Media object's next photo or video.",
+      "mode": "NULLABLE",
+      "name": "taps_forward",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Total number of taps to see this story IG Media object's previous photo or video.",
+      "mode": "NULLABLE",
+      "name": "taps_back",
+      "type": "INTEGER"
+    }
+  ],
+"reels": [
+    {
+      "description": "Caption. @ symbol excluded.",
+      "mode": "NULLABLE",
+      "name": "caption",
+      "type": "STRING"
+    }, 
+    {
+      "description": "Count of likes on the media.",
+      "mode": "NULLABLE",
+      "name": "like_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Media URL. Will be omitted from responses if the media contains copyrighted material, or has been flagged for a copyright violation.",
+      "mode": "NULLABLE",
+      "name": "media_url",
+      "type": "STRING"
+    },    
+    {
+      "description": "Media type. Can be CAROUSEL_ALBUM, IMAGE, or VIDEO.",
+      "mode": "NULLABLE",
+      "name": "media_type",
+      "type": "STRING"
+    },
+    {
+      "description": "Surface where the media is published. Can be AD, FEED, IGTV, or STORY.",
+      "mode": "NULLABLE",
+      "name": "media_product_type",
+      "type": "STRING"
+    },
+    {
+      "description": "Count of comments on the media.",
+      "mode": "NULLABLE",
+      "name": "comments_count",
+      "type": "INTEGER"
+    },
+    {
+      "description": "Permanent URL to the media.",
+      "mode": "NULLABLE",
+      "name": "permalink",
+      "type": "STRING"
+    },
+    {
+      "description": "IG Media ID.",
+      "mode": "NULLABLE",
+      "name": "ig_id",
+      "type": "STRING"
+    },
+    {
+      "description": "Indicates if comments are enabled or disabled.",
+      "mode": "NULLABLE",
+      "name": "is_comment_enabled",
+      "type": "BOOLEAN"
+    },
+    {
+      "description": "Media thumbnail URL. Only available on VIDEO media.",
+      "mode": "NULLABLE",
+      "name": "thumbnail_url",
+      "type": "STRING"
+    },
+    {
+      "description": "Username of user who created the media.",
+      "mode": "NULLABLE",
+      "name": "username",
+      "type": "STRING"
+    }, 
+    {
+      "description": "Media ID.",
+      "mode": "NULLABLE",
+      "name": "id",
+      "type": "STRING"
+    },  
+    { 
+      "description": "Number of comments on the reel. Metric in development.",
+      "mode": "NULLABLE",
+      "name": "comments",
+      "type": "INTEGER"
+    },
+    { 
+      "description": "Number of likes on the reel. Metric in development.",
+      "mode": "NULLABLE",
+      "name": "likes",
+      "type": "INTEGER"
+    },
+    { 
+      "description": "Number of times the reels starts to play after an impression is already counted. This is defined as video sessions with 1 ms or more of playback and excludes replays. Metric in development.",
+      "mode": "NULLABLE",
+      "name": "plays",
+      "type": "INTEGER"
+    },
+    { 
+      "description": "Number of unique accounts that have seen the reel at least once. Reach is different from impressions, which can include multiple views of a reel by the same account. Metric is estimated and in development.",
+      "mode": "NULLABLE",
+      "name": "reach",
+      "type": "INTEGER"
+    },
+    { 
+      "description": "Number of saves of the reel. Metric in development.",
+      "mode": "NULLABLE",
+      "name": "saved",
+      "type": "INTEGER"
+    },
+    { 
+      "description": "Number of shares of the reel. Metric in development.",
+      "mode": "NULLABLE",
+      "name": "shares",
+      "type": "INTEGER"
+    },
+    { 
+      "description": "Number of likes, saves, comments, and shares on the reel, minus the number of unlikes, unsaves, and deleted comments. Metric in development.",
+      "mode": "NULLABLE",
+      "name": "total_interactions",
+      "type": "INTEGER"
+    },
+    {
+      "description": "ISO 8601 formatted creation date in UTC.",
+      "mode": "NULLABLE",
+      "name": "created_date",
+      "type": "TIMESTAMP"
+    }                                    
+  ]
+}
