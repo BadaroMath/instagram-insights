@@ -5,33 +5,27 @@ Get insights and metrics from a client's instagram account and media, like posts
 API documentation: https://developers.facebook.com/docs/instagram-api
 
 Author:
-    Raccoon.Monks
+    jose.badaro@mediamonks.com
 """
 
 
 
 import requests
 import logging as log
-import os
 from datetime import datetime, timedelta
 import pytz
 import time
 from google.cloud import bigquery
-from google.cloud import secretmanager
 import json
 from utils import *
-
 
 def config_log():
     """
     Configure logging level, output format and sends it to a file.
     """
-
     today = datetime.today().strftime("%Y%m%d")
     logging_level = 20
-    # log_filename = f'logs/instagram_organic_{today}.log'
     log.basicConfig(
-        # filename=log_filename,
         level=logging_level,
         format=f'[%(asctime)s.%(msecs)03d] %(levelname)s: %(funcName)s: %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S',
@@ -49,15 +43,9 @@ def get_token(config):
         {str} -- authentication token
     
     """
-    client = secretmanager.SecretManagerServiceClient()
-    request = {
-        "name": f"projects/{SECRET_PROJECT_ID}/secrets/{FACEBOOK_CREDENTIALS_NAME}/versions/latest"
-    }
-    response = client.access_secret_version(request)
-    secret_string = response.payload.data.decode("UTF-8")
-    credentials = json.loads(secret_string)
-    
-    
+    with open("secrets/token.json", "r") as file:
+        credentials = json.load(file)
+
     return credentials["access_token"]
 
 
@@ -85,21 +73,39 @@ def make_api_call(endpoint, params, retry=False):
 
     if response.status_code == 500:
         if not retry:
-            log.warning("Server error. Retrying in 5 minutes")
-            time.sleep(300)
+            log.warning("Server error. Retrying in 30 seconds")
+            time.sleep(30)
             make_api_call(endpoint, params, retry=True)
         else:
             log.error(response.text)
-            raise Exception("API call failed")
-
-    # error when media was posted before account was converted to business
-    if json_response["error"].get("code") == 100 and\
-       json_response["error"].get("error_subcode") == 2108006:
-        return "continue"
 
     log.error(response.text)
-    raise Exception("API call failed")
 
+
+def get_ig_id(token, account_id):
+    """
+    Get User IG id.
+    https://developers.facebook.com/docs/instagram-api/reference/user
+
+    Arguments:
+        token {str} -- authentication token
+        account_id {str} -- id of the account
+
+    Returns:
+        ig_id {str} -- IG id of the account
+    """
+
+    log.info("Retrieving IG id")
+
+    ig_id_url = IG_ID_ENDPOINT.format(account_id)
+
+    params = {
+        "access_token": token
+    }
+
+    json_response = make_api_call(ig_id_url, params)
+
+    return json_response["instagram_business_account"]["id"]
 
 def get_account_general_data(token, account_id):
     """
@@ -127,6 +133,32 @@ def get_account_general_data(token, account_id):
 
     return json_response
 
+def get_business_discovery(token, account_id, names):
+    """
+    Get User account public data.
+    https://developers.facebook.com/docs/instagram-api/reference/ig-user/business_discovery
+
+    Arguments:
+        token {str} -- authentication token
+        account_id {str} -- id of the account
+
+    Returns:
+        json_response {dict} -- API response with account fields
+    """
+    log.info("Retrieving account basic data")
+    params = {
+        "access_token": token
+    }
+    all_discovery=[]
+    for name in names:
+        account_data_url = ACCOUNT_GENERAL_DATA_ENDPOINT.format(account_id)
+        discovery_fields = BUSINESS_DISCOVERY_ENDPOINT.format(name)
+        discovery_url = account_data_url + discovery_fields + BUSINESS_DISCOVERY_FIELDS
+        json_response = make_api_call(discovery_url, params)
+        del json_response["id"]
+        all_discovery.append(json_response["business_discovery"])
+
+    return all_discovery
 
 def get_account_insights(token, account_id):
     """
@@ -147,7 +179,7 @@ def get_account_insights(token, account_id):
     account_insights_url = ACCOUNT_INSIGHTS_ENDPOINT.format(account_id)
     today = datetime.today()
     yesterday = (today - timedelta(days=1)).strftime("%Y-%m-%d")
-    two_days_ago = (today - timedelta(days=2)).strftime("%Y-%m-%d")
+    two_days_ago = (today - timedelta(days=28)).strftime("%Y-%m-%d")
 
     params = {
         "access_token": token,
@@ -194,7 +226,7 @@ def get_account_media_ids(token, account_id):
     media_url = MEDIA_ID_ENDPOINT.format(account_id)
     params = {
         "access_token": token,
-        "fields": "account_id, timestamp",
+        "fields": "id, timestamp",
         "limit": 100
     }
 
@@ -202,7 +234,7 @@ def get_account_media_ids(token, account_id):
     media_ids = []
 
     today = datetime.now(tz=pytz.utc)
-    d31_ago = today - timedelta(days=90)
+    d90_ago = today - timedelta(days=90)
     breaking = False
 
     while next_media_page is not None and breaking is False:
@@ -213,7 +245,7 @@ def get_account_media_ids(token, account_id):
             max_date = datetime.strptime(
                     row['timestamp'],
                     "%Y-%m-%dT%H:%M:%S%z")
-        if max_date < d31_ago:
+        if max_date < d90_ago:
             breaking=True
         else:
             next_media_page = json_response.get("paging").get("next")
@@ -223,6 +255,42 @@ def get_account_media_ids(token, account_id):
                 .get("after")
 
     return media_ids
+
+def get_account_stories_ids(token, account_id):
+    """
+    Get all media ids from a user.
+    https://developers.facebook.com/docs/instagram-api/reference/ig-user/media#reading
+
+    Arguments:
+        token {str} -- authentication token
+        account_id {str} -- id of the account
+
+    Returns:
+        media_ids {list} -- all media ids
+    """
+
+    log.info("Retrieving media ids")
+
+    media_url = STORY_ID_ENDPOINT.format(account_id)
+    params = {
+        "access_token": token,
+        "fields": "id, timestamp",
+        "limit": 100
+    }
+
+    next_stories_page = ""
+    stories_ids = []
+
+    while next_stories_page is not None:
+        json_response = make_api_call(media_url, params)
+        stories_ids += json_response.get("data")
+        next_stories_page = json_response.get("paging").get("after")
+        params["after"] = json_response\
+            .get("paging")\
+            .get("cursors")\
+            .get("after")
+
+    return stories_ids
 
 def get_media_general_data(token, media_ids):
     """
@@ -439,9 +507,9 @@ def transform_media_data(account_id, media_data, media_insights):
             continue
         insights = transformed_media_insights[media["id"]]
         media.update(insights)
-        media["created_date"] = media["timestamp"]\
+        media["created_time"] = media["timestamp"]\
             .replace("T", " ").split("+")[0]
-        media["created_date"] = datetime.strptime(media["created_date"], "%Y-%m-%d %H:%M:%S")\
+        media["created_time"] = datetime.strptime(media["created_time"], "%Y-%m-%d %H:%M:%S")\
             .strftime("%Y-%m-%d %H:%M:%S %Z")      
         del media["timestamp"]
         if media["media_product_type"] == "STORY":
@@ -545,7 +613,7 @@ def save_data(config, account_data, media_data):
         bigquery_save_data(config, table_name, data, schema)
 
 
-def etl(config):
+def etl(config, names):
     """
     Get account and media data from instagram API,
     transform the data and load to BigQuery
@@ -556,17 +624,23 @@ def etl(config):
 
     config_log()
     account_id = config["account_id"]
-    token = get_token(config)
-
     try:
+        log.info("Starting ETL")
+        log.info("Getting token")
+        token = get_token(config)
+        log.info("Getting IG id")
+        ig_id = get_ig_id(token, account_id)
         log.info("Starting extraction")
-        account_data = get_account_general_data(token, account_id)
-        account_insights = get_account_insights(token, account_id)
+        account_data = get_account_general_data(token, ig_id)
+        account_data["business_discovery"] = get_business_discovery(token, ig_id, names)
+        account_insights = get_account_insights(token, ig_id)
 
         data = {}
-        media_ids = get_account_media_ids(token, account_id)
+        media_ids = get_account_media_ids(token, ig_id)
+        story_ids = get_account_stories_ids(token, ig_id)
+        all_ids = media_ids + story_ids
 
-        media_data = get_media_general_data(token, media_ids)
+        media_data = get_media_general_data(token, all_ids)
         media_insights = get_media_insights(token, media_data)
 
         transformed_account_data = transform_account_data(
@@ -574,12 +648,13 @@ def etl(config):
             account_insights)
 
         transformed_media_data = transform_media_data(
-            account_id,
+            ig_id,
             media_data,
             media_insights)
 
         data["account_data"] = transformed_account_data
         data["media_data"] = transformed_media_data
+        transformed_media_data["post"]
         save_data(config, transformed_account_data, transformed_media_data)
         log.info("End of extraction")
     except Exception as error:
@@ -589,17 +664,52 @@ def etl(config):
     return 200, data
 
 
-
 def main(request):
-    config = {
-        "account_id": "",
-        "project_id": "",
-        "dataset_id": ""
-    }
-    status_code, data = etl(config)
+    req_json = message#request.get_json()
+    config = req_json["config"]
+    names = req_json["names"]
+    status_code, data = etl(config, names)
 
     if status_code == 500:
-      return (500)
-    return (200)
+      return ("not ok", 500)
+    return ("ok", 200)
 
-main("")
+
+
+
+
+
+
+###################
+
+import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "credentials.json"    
+message = {
+   "config":{
+      "account_id":"141453935911808",
+      "project_id":"raccoon-ds",
+      "dataset_id":"teste2",
+      "user_id": "users/102274350531793416628"
+   },
+   "names":[
+      "pichauoficial",
+      "terabyteshop",
+      "magazineluiza",
+      "amazonbrasil",
+      "megamamute",
+      "mercadolivre",
+      "americanas",
+      "submarino",
+      "canalshoptime",
+      "casasbahia",
+      "pontofrio",
+      "extra_oficial",
+      "ricardoeletrooficial",
+      "fastshop"
+   ]
+}
+main(message)
+
+url1 = f"https://graph.facebook.com/v18.0/{media_id}?fields=caption,comments_count,id,ig_id,is_shared_to_feed,like_count,media_product_type,media_type,media_url,owner,permalink,shortcode,timestamp,thumbnail_url,username,insights.metric(impressions,reach,replies,follows,profile_visits,shares,total_interactions)&access_token={access_token}"
+url2 = f"https://graph.facebook.com/v18.0/{media_id}?fields=insights.metric(navigation).breakdown(story_navigation_action_type)&access_token={access_token}"
+url3 = f"https://graph.facebook.com/v18.0/{media_id}?fields=insights.metric(profile_activity).breakdown(action_type)&access_token={access_token}"

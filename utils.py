@@ -1,17 +1,18 @@
 
 SCHEMA_FILENAME = "instagram_schemas.json"
-STORAGE_BUCKET_NAME = ""
-FACEBOOK_CREDENTIALS_NAME = ""
-SECRET_PROJECT_ID = ""
 
-API_VERSION = "v10.0/"
+API_VERSION = "v17.0/"
 HOST = "https://graph.facebook.com/"
 
+IG_ID_ENDPOINT = HOST + API_VERSION + "{}?fields=instagram_business_account"
 ACCOUNT_GENERAL_DATA_ENDPOINT = HOST + API_VERSION + "{}"
 ACCOUNT_INSIGHTS_ENDPOINT = HOST + API_VERSION + "{}/insights"
 MEDIA_ID_ENDPOINT = HOST + API_VERSION + "{}/media"
 MEDIA_GENERAL_DATA_ENDPOINT = HOST + API_VERSION + "{}"
 MEDIA_INSIGHTS_ENDPOINT = HOST + API_VERSION + "{}/insights"
+STORY_ID_ENDPOINT = HOST + API_VERSION + "{}/stories"
+BUSINESS_DISCOVERY_ENDPOINT = "?fields=business_discovery.username({})"
+BUSINESS_DISCOVERY_FIELDS = "{name,followers_count,media_count,follows_count,profile_picture_url}"
 
 ACCOUNT_FIELDS = [
     "biography",
@@ -54,10 +55,8 @@ MEDIA_FIELDS = [
     "timestamp",
     "permalink",
     "ig_id",
-    "is_comment_enabled",
     "thumbnail_url",
-    "username",
-    "video_title"
+    "username"
 ]
 MEDIA_IMAGE_METRICS = [
     "engagement",

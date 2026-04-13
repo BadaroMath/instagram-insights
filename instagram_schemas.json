@@ -129,6 +129,44 @@
       "type": "INTEGER"
     },
     {
+      "description": "Data about other Instagram users with an Instagram business or creator account.",
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "name",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "followers_count",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "media_count",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "follows_count",
+          "type": "INTEGER"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "profile_picture_url",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "id",
+          "type": "INTEGER"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "business_discovery",
+      "type": "RECORD"
+    },
+    {
       "description": "The cities of the IG User's followers. Not available on IG Users with fewer than 100 followers.",
       "fields": [
         {
@@ -217,7 +255,7 @@
     {
       "description": "ISO 8601 formatted creation date in UTC.",
       "mode": "NULLABLE",
-      "name": "created_date",
+      "name": "created_time",
       "type": "TIMESTAMP"
     },
     {
@@ -267,12 +305,6 @@
       "mode": "NULLABLE",
       "name": "video_title",
       "type": "STRING"
-    },
-    {
-      "description": "Indicates if comments are enabled or disabled.",
-      "mode": "NULLABLE",
-      "name": "is_comment_enabled",
-      "type": "BOOLEAN"
     },
     {
       "description": "Count of likes on the media.",
@@ -329,11 +361,17 @@
       "mode": "NULLABLE",
       "name": "ig_id",
       "type": "STRING"
+    }, 
+    {
+      "description": "Media thumbnail URL. Only available on VIDEO media.",
+      "mode": "NULLABLE",
+      "name": "thumbnail_url",
+      "type": "STRING"
     },
     {
       "description": "ISO 8601 formatted creation date in UTC.",
       "mode": "NULLABLE",
-      "name": "timestamp",
+      "name": "created_time",
       "type": "TIMESTAMP"
     },
     {
@@ -371,12 +409,6 @@
       "mode": "NULLABLE",
       "name": "permalink",
       "type": "STRING"
-    },
-    {
-      "description": "Indicates if comments are enabled or disabled.",
-      "mode": "NULLABLE",
-      "name": "is_comment_enabled",
-      "type": "BOOLEAN"
     },
     {
       "description": "Count of likes on the media.",
@@ -477,12 +509,6 @@
       "type": "STRING"
     },
     {
-      "description": "Indicates if comments are enabled or disabled.",
-      "mode": "NULLABLE",
-      "name": "is_comment_enabled",
-      "type": "BOOLEAN"
-    },
-    {
       "description": "Media thumbnail URL. Only available on VIDEO media.",
       "mode": "NULLABLE",
       "name": "thumbnail_url",
@@ -545,7 +571,7 @@
     {
       "description": "ISO 8601 formatted creation date in UTC.",
       "mode": "NULLABLE",
-      "name": "created_date",
+      "name": "created_time",
       "type": "TIMESTAMP"
     }                                    
   ]
