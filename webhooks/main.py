@@ -3,14 +3,14 @@ from httplib2 import Http
 from datetime import datetime
 from json import dumps
 from google.cloud import bigquery
-from webhooks.utils import DESTINATIONS
+from utils import DESTINATIONS, get_secret
 from google.api_core.exceptions import NotFound
 
 def chat_webhook(
         message: str
         ):
         """Google Chat incoming webhook quickstart."""
-        WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAAj-Vv5fQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=bfghBmP6Yd6JcCRnBwkzEOgwsJ9bWMSs9u2fH1e37F0"
+        WEBHOOK_URL = get_secret("chat_webhook_url")
         url = WEBHOOK_URL
         bot_message = {
             'text': f'{message}'}

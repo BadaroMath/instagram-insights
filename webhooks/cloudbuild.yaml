@@ -1,0 +1,33 @@
+serviceAccount: projects/52575712744/serviceAccounts/meta-organic-extractor@raccoon-ds.iam.gserviceaccount.com
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+- id: "Build"
+  name: gcr.io/cloud-builders/docker
+  args:
+    - build
+    - -t
+    - us-central1-docker.pkg.dev/$PROJECT_ID/instagram-repo/instagram-webhooks:$SHORT_SHA
+    - .
+- id: "Push"
+  name: gcr.io/cloud-builders/docker
+  args:
+    - push
+    - us-central1-docker.pkg.dev/$PROJECT_ID/instagram-repo/instagram-webhooks:$SHORT_SHA
+- id: "Deploy"
+  name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      gcloud run deploy instagram-webhooks \
+        --image us-central1-docker.pkg.dev/$PROJECT_ID/instagram-repo/instagram-webhooks:$SHORT_SHA \
+        --region us-central1 \
+        --platform managed \
+        --allow-unauthenticated
+
+images:
+- us-central1-docker.pkg.dev/$PROJECT_ID/instagram-repo/instagram-webhooks:$SHORT_SHA
+
+timeout: "1200s"

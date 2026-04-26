@@ -30,6 +30,7 @@ from utils import (
     DISCOVERY_FIELDS_IG_ACCOUNT,
     DISCOVERY_FIELDS_MEDIA_ITEMS,
     API_RATE_LIMIT_ERROR_CODE,
+    get_secret,
 )
 
 API_RATE_LIMIT_ERROR_CODE = 4
@@ -50,20 +51,16 @@ def config_log():
 
 def get_token(bm: bool) -> str | None:
     """
-    Retrieve the Instagram Graph API access token from a JSON secrets file.
+    Retrieve the Instagram Graph API access token from Secret Manager.
     """
     try:
-        with open("/secrets/token.json", "r") as file:
-            credentials = json.load(file)
-        token_key = "access_token_sorocaba" if bm else "access_token"
-        token = credentials.get(token_key)
+        secret_name = "instagram_access_token_sorocaba" if bm else "instagram_access_token"
+        token = get_secret(secret_name)
         if not token:
-            log.error(f"Chave '{token_key}' não encontrada em token.json.")
+            log.error(f"Secret '{secret_name}' está vazio no Secret Manager.")
         return token
-    except FileNotFoundError:
-        log.error("/secrets/token.json não encontrado.")
-    except json.JSONDecodeError:
-        log.error("Erro ao decodificar JSON de /secrets/token.json.")
+    except Exception as e:
+        log.error(f"Erro ao buscar secret no Secret Manager: {e}")
     return None
 
 

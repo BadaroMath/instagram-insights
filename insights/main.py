@@ -1,10 +1,11 @@
-from instagram_v18.utils import (
+from utils import (
     PARAMS, 
     IG_ID_ENDPOINT, 
     DATA_ENDPOINT, 
     MEDIA_ENDPOINT,
     INSIGHTS_ENDPOINT,
-    SCHEMA_FILENAME)
+    SCHEMA_FILENAME,
+    get_secret)
 import requests
 import logging as log
 from datetime import datetime, timedelta
@@ -33,19 +34,14 @@ def config_log():
 
 def get_token():
     """
-    Get token from file to authenticate API calls.
-
-    Arguments:
-        config {dict} -- params with the path to token file
+    Get token from Secret Manager to authenticate API calls.
 
     Returns:
         {str} -- authentication token
     
     """
-    with open("secrets/token.json", "r") as file:
-        credentials = json.load(file)
-
-    return credentials.get("access_token")
+    token = get_secret("instagram_access_token")
+    return token
 
 
 def make_api_call(endpoint, params, retry=False):

@@ -1,7 +1,17 @@
+import os
+from google.cloud import secretmanager
 
-SCHEMA_FILENAME = "instagram_v18/schema.json"
+def get_secret(secret_id: str, version_id: str = "latest") -> str:
+    """Access the payload for the given secret version if one exists."""
+    project_id = os.environ.get("PROJECT_ID", "kabum-gcp") # Default or get from env
+    client = secretmanager.SecretManagerServiceClient()
+    name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
+    response = client.access_secret_version(request={"name": name})
+    return response.payload.data.decode("UTF-8")
+
+SCHEMA_FILENAME = "instagram_v22/schema.json"
 HOST = "https://graph.facebook.com"
-API_VERSION = "/v18.0/"
+API_VERSION = "/v22.0/"
 IG_ID_ENDPOINT = HOST + API_VERSION + "{}?fields=instagram_business_account.fields(id, username)"
 DATA_ENDPOINT = HOST + API_VERSION + "{}"
 MEDIA_ENDPOINT = HOST + API_VERSION + "{}" + "/media"
